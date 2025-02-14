@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>幸运大转盘</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(#87CEEB, #E0F6FF);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+
+        #wheel-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                #ff9a9e 0% 11.11%,
+                #ffd6a5 11.11% 22.22%,
+                #fdffb6 22.22% 33.33%,
+                #caffbf 33.33% 44.44%,
+                #9bf6ff 44.44% 55.55%,
+                #a0c4ff 55.55% 66.66%,
+                #bdb2ff 66.66% 77.77%,
+                #ffc6ff 77.77% 88.88%,
+                #ff9a9e 88.88% 100%
+            );
+            position: relative;
+            transition: transform 3s ease-out;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        #pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 30px solid #ff4757;
+            z-index: 1;
+        }
+
+        .number {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(var(--rotate));
+            font-size: 20px;
+            font-weight: bold;
+            color: #2f3542;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2f3542;
+        }
+
+        #reset-btn {
+            margin-top: 30px;
+            padding: 12px 30px;
+            font-size: 18px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        #reset-btn:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div id="wheel-container">
+        <div id="wheel">
+            <!-- 添加号码 -->
+            <div class="number" style="--rotate: 20deg;">1</div>
+            <div class="number" style="--rotate: 60deg;">2</div>
+            <div class="number" style="--rotate: 100deg;">3</div>
+            <div class="number" style="--rotate: 140deg;">4</div>
+            <div class="number" style="--rotate: 180deg;">5</div>
+            <div class="number" style="--rotate: 220deg;">6</div>
+            <div class="number" style="--rotate: 260deg;">7</div>
+            <div class="number" style="--rotate: 300deg;">8</div>
+            <div class="number" style="--rotate: 340deg;">9</div>
+        </div>
+        <div id="pointer"></div>
+    </div>
+    <div id="result">点击转盘开始</div>
+    <button id="reset-btn">重置</button>
+
+    <script>
+        const wheel = document.getElementById('wheel');
+        const result = document.getElementById('result');
+        const resetBtn = document.getElementById('reset-btn');
+        const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        let isSpinning = false;
+
+        function spinWheel() {
+            if (isSpinning) return;
+            isSpinning = true;
+
+            // 随机生成一个角度
+            const randomAngle = Math.floor(Math.random() * 3600) + 1440; // 至少旋转4圈
+            const selectedNumber = Math.floor((randomAngle % 360) / (360 / 9)) + 1;
+
+            // 旋转转盘
+            wheel.style.transform = `rotate(${randomAngle}deg)`;
+
+            // 显示结果
+            setTimeout(() => {
+                result.textContent = `抽中的号码是：${selectedNumber}`;
+                isSpinning = false;
+            }, 3000);
+        }
+
+        function resetWheel() {
+            wheel.style.transform = 'rotate(0deg)';
+            result.textContent = '点击转盘开始';
+        }
+
+        wheel.addEventListener('click', spinWheel);
+        resetBtn.addEventListener('click', resetWheel);
+    </script>
+</body>
+</html>
